@@ -6,4 +6,4 @@ virtualenv venv
 pip install src/backend/requirements.txt
 python manage.py DEBUG
 ```
-** Now starting only backend! **
+**Now starting only backend!**
