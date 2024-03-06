@@ -1,0 +1,2 @@
+File using only for save directory in git.
+After first frontend feauture we shoudl to delete this file.
