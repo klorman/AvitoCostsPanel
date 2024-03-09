@@ -1,14 +1,13 @@
 import { loginRequiredRoutes, loginFreeRoutes } from "../router"
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, Navigate } from 'react-router-dom'
 import { useContext } from "react" 
 import { AuthContext } from "../context/AuthContext"
 
 export const Router = () => {
-    const { authData } = useContext(AuthContext)
-    console.log(loginFreeRoutes)
-
+    const { isAuth, setIsAuth } = useContext(AuthContext)
+    
     return (
-        authData.isAuth?
+        isAuth?
         <Routes>
             { loginRequiredRoutes.map((route) =>  
                 <Route 
@@ -29,6 +28,11 @@ export const Router = () => {
                 /> 
             )
             }
+            <Route 
+                    key='navigate'
+                    element={<Navigate to='/auth'/>}
+                    path='*'
+            /> 
         </Routes>
     )
         
