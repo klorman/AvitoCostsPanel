@@ -4,10 +4,10 @@ import { useContext } from "react"
 import { AuthContext } from "../context/AuthContext"
 
 export const Router = () => {
-    const { authData } = useContext(AuthContext)
-
+    const { isAuth, setIsAuth } = useContext(AuthContext)
+    
     return (
-        authData.isAuth?
+        isAuth?
         <Routes>
             { loginRequiredRoutes.map((route) =>  
                 <Route 

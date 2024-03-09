@@ -1,12 +1,26 @@
 import { useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../context/AuthContext'
+import '../style/AuthPage.css'
 
 export default function AuthPage() {
-    const navigate = useNavigate()
-    const { authData, setAuthData } = useContext(AuthContext)
-
     return (
-        <div>Hello world from auth!</div>
+        <form>
+            <label>
+                Имя пользователя:
+                <input
+                type="text"
+                />
+            </label>
+            <br />
+            <label>
+                Пароль:
+                <input
+                type="password"
+                />
+            </label>
+            <br />
+            <button type="submit">Войти</button>
+        </form>
     )
 }

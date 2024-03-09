@@ -2,16 +2,18 @@ import { BrowserRouter } from "react-router-dom";
 import { AuthContext } from "./context/AuthContext";
 import { Router } from "./components/Router";
 import { useState } from "react";
+import './style/App.css'
+import acceptSettings from "./settings";
 
 export default function App() {
-  const [authData, setAuthData] = useState({ isAuth: false, token: '' })
-
+  acceptSettings()
+  const [isAuth, setIsAuth] = useState(false)
   return (
     <div className="App">
       <AuthContext.Provider
         value={{
-          authData,
-          setAuthData
+          isAuth,
+          setIsAuth
         }}
       >
         <BrowserRouter>
