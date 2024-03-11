@@ -19,7 +19,7 @@ class FindPriceService:
         category_to_check = category_id
 
         # Получаем ID скидочных матриц для сегмента пользователя
-        discount_matrices_ids = db.query(Segment.discount_matrix_id).filter(Segment.id == user_segment_id).order_by(Segment.discount_matrix_id.desc()).all()
+        discount_matrices_ids = db.query(Segment.discount_matrix_id).filter(Segment.id == user_segment_id).all()
         discount_matrices_ids = [dm[0] for dm in discount_matrices_ids]  # Преобразование в список ID
 
         while location_to_check:
@@ -29,7 +29,7 @@ class FindPriceService:
                     DiscountPriceMatrix.id.in_(discount_matrices_ids),
                     DiscountPriceMatrix.location_id == location_to_check,
                     DiscountPriceMatrix.category_id == category_to_check
-                ).first()
+                ).order_by(DiscountPriceMatrix.id.desc()).first()
                 if discount_matrix_price:
                     return {
                         "price": discount_matrix_price.price,
