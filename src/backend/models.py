@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, create_engine
+from sqlalchemy import Column, Integer, String, ForeignKey, UniqueConstraint, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 
@@ -21,34 +21,53 @@ class Category(Base):
     parent = relationship('Category', remote_side=[id], backref='children')
 
 
-class PriceMatrix(Base):
-    __tablename__ = 'price_matrix'
+class BaselineMatrices(Base):
+    __tablename__ = 'baseline_matrices'
     id = Column(Integer, primary_key=True)
+    matrix_id = Column(Integer)
     location_id = Column(Integer, ForeignKey('locations.id'))
     category_id = Column(Integer, ForeignKey('categories.id'))
     price = Column(Integer)
+    __table_args__ = (
+        UniqueConstraint('matrix_id', 'location_id', 'category_id', name='unique_matrix_location_category'),
+    )
 
 
-class DiscountPriceMatrix(Base):
-    __tablename__ = 'discount_price_matrix'
+class DiscountMatrices(Base):
+    __tablename__ = 'discount_matrices'
     id = Column(Integer, primary_key=True)
+    matrix_id = Column(Integer)
     location_id = Column(Integer, ForeignKey('locations.id'))
     category_id = Column(Integer, ForeignKey('categories.id'))
     price = Column(Integer)
+    __table_args__ = (
+        UniqueConstraint('matrix_id', 'location_id', 'category_id', name='unique_matrix_location_category'),
+    )
+
+
+class CalculatedPrices(Base):
+    __tablename__ = 'calculated_prices'
+    id = Column(Integer, primary_key=True)
+    discount_matrix_id = Column(Integer, ForeignKey('segments.id'))
+    location_id = Column(Integer, ForeignKey('locations.id'))
+    category_id = Column(Integer, ForeignKey('categories.id'))
+    price = Column(Integer)
+    __table_args__ = (
+        UniqueConstraint('discount_matrix_id', 'location_id', 'category_id', name='unique_discount_location_category'),
+    )
 
 
 class UserAvito(Base):
     __tablename__ = 'user_avito'
     id = Column(Integer, primary_key=True)
-    segment_id = Column(Integer, ForeignKey('segments.id'))
-    segment = relationship('Segment', backref='users')
+    user_id = Column(Integer)
+    segment_id = Column(Integer, ForeignKey('segments.id')) # может быть несколько сегментов
 
 
 class Segment(Base):
     __tablename__ = 'segments'
     id = Column(Integer, primary_key=True)
-    discount_matrix_id = Column(Integer, ForeignKey('discount_price_matrix.id'))
-    discount_matrix = relationship('DiscountPriceMatrix', backref='segment')
+    discount_matrix_id = Column(Integer) # один сегмент - одна матрица
 
 
 

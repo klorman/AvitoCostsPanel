@@ -5,7 +5,7 @@ from fastapi import FastAPI, HTTPException, Depends
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 
-from src.backend.models import engine, UserAvito, PriceMatrix, DiscountPriceMatrix
+from src.backend.models import engine, UserAvito, BaselineMatrices, DiscountMatrices
 from src.backend.services.findPriceService import FindPriceService
 
 app = FastAPI()
@@ -57,12 +57,12 @@ def get_price(query: PriceQuery, db: Session = Depends(get_db)):
 @app.get("/get_matrix")
 def get_matrix(matrix_type: MatrixType, id: Optional[int] = None, db: Session = Depends(get_db)):
     if matrix_type == MatrixType.Base:
-        query = db.query(PriceMatrix)
+        query = db.query(BaselineMatrices)
     else:  # MatrixType.Discount
-        query = db.query(DiscountPriceMatrix)
+        query = db.query(DiscountMatrices)
 
     if id is not None:
-        query = query.filter_by(id=id)
+        query = query.filter_by(matrix_id=id)
 
     result = query.all()
     return [
