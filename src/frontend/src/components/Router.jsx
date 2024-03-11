@@ -1,4 +1,4 @@
-import { loginRequiredRoutes, loginFreeRoutes } from "../router"
+import { loginRequiredRoutes, loginFreeRoutes } from "../routes"
 import { Route, Routes, Navigate } from 'react-router-dom'
 import { useContext } from "react" 
 import { AuthContext } from "../context/AuthContext"
