@@ -1,11 +1,19 @@
-import React from 'react'
 import classes from './SearchNavbar.module.css'
 import TreeNavbar from './TreeNavbar'
 import Select from './UI/Select'
 import LocationLabel from './UI/LocationLabel'
 import MatrixLabel from './UI/MatrixLabel'
+import useMatrix from '../hooks/useMatrix.ts'
+import useLocation from '../hooks/useLocation.ts'
+import { useState } from 'react'
 
 export default function SearchNavbar() {
+    const [curMatrix, setCurMatrix] = useState()
+    const { namedMatrices, matrices } = useMatrix()
+    
+    const [curLocation, setCurLocation] = useState()
+    const { namedLocations } = useLocation(curMatrix)
+
     return (
         <div className={classes.hero}>
             <div className={classes.content}>
@@ -28,9 +36,8 @@ export default function SearchNavbar() {
                     </a>
                 </div>
                 <TreeNavbar />
-                <div style={ {width: '700px'} }></div>
-                <Select list={ ['baseline1', 'baseline2' ] } label= { MatrixLabel } disabled={ false } />
-                <Select list={ ['Новосибирск', 'Омск', 'Казань', 'Куйбышев' ] } label= { LocationLabel }  disabled={ true } />
+                <Select list={ namedMatrices } label= { MatrixLabel } disabled={ false } onSelect={ (index) => setCurMatrix(matrices[index]) } />
+                <Select list={ namedLocations } label= { LocationLabel }  disabled={ !curMatrix } />
             </div>
         </div>
     )

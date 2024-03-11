@@ -5,9 +5,10 @@ import AvitoInput from './AvitoInput'
 export default function Select(props) {
     const [filter, setFilter] = useState('')
     const [listVisible, setListVisible] = useState(false)
-
     const filteredList = useMemo(() => {
-        return props.list.filter(line => line.toLowerCase().startsWith(filter.toLowerCase()))
+        if (props.list) {
+            return props.list.filter(line => line.toLowerCase().startsWith(filter.toLowerCase()))
+        }
     }, [props.list, filter])
 
     return (
@@ -22,9 +23,10 @@ export default function Select(props) {
                 onChange={ (e) => setFilter(e.target.value) } 
                 />
                 <ul>
-                    { filteredList.slice(0, 3).map((line, index) => (
-                        <li key={index}>{ line }</li>
-                    ), ) }
+                    { filteredList.slice(0, Math.min(3, filteredList.length)).map((line, index) => (
+                        <li onClick={ () => props.onSelect(0) } key={index}>{ line }</li>
+                    )) 
+                    }
                 </ul>
             </div>
              :
