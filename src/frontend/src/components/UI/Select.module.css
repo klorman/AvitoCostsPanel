@@ -15,7 +15,7 @@
 .disabled
 {
     cursor: pointer;
-    color: grey !important;
+    color: grey;
     filter: invert(57%) sepia(5%) saturate(15%) hue-rotate(5deg) brightness(87%) contrast(91%);
 }
 

@@ -4,7 +4,7 @@ import classes from './Select.module.css'
 export default function LocationLabel(props) {
     return (
         <div 
-        className={ (props.disabled? classes.disabled: "") + " " + classes.label }
+        className={ (props.disabled? classes.disabled: "") + " " + (!props.disabled? classes.label: "") }
         onClick={ () => !props.disabled? props.onClick(): 0 }
         >
             <svg className={ classes.icon } width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
