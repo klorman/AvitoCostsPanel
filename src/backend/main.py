@@ -2,11 +2,12 @@ from enum import Enum
 from typing import Optional
 
 from fastapi import FastAPI, HTTPException, Depends
-from sqlalchemy.orm import Session
+from sqlalchemy import func
+from sqlalchemy.orm import Session, session
 from pydantic import BaseModel
 
-from src.backend.models import engine, UserAvito, PriceMatrix, DiscountPriceMatrix
-from src.backend.services.findPriceService import FindPriceService
+from models import engine, UserAvito, BaselineMatrices, DiscountMatrices
+from services.findPriceService import FindPriceService
 
 app = FastAPI()
 find_price_service = FindPriceService()
@@ -41,11 +42,11 @@ def get_db():
 
 @app.post("/get-price", response_model=PriceResponse)
 def get_price(query: PriceQuery, db: Session = Depends(get_db)):
-    user = db.query(UserAvito).filter(UserAvito.id == query.user_id).first()
+    user = db.query(UserAvito).filter(UserAvito.user_id == query.user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-
-    price_info = find_price_service.find_price(db, query.location_id, query.category_id, user.segment_id)
+    max_matrix_id = db.query(func.max(BaselineMatrices.matrix_id)).scalar()
+    price_info = find_price_service.find_price(db, query.location_id, query.category_id, user.user_id, max_matrix_id)
 
     if price_info:
         return PriceResponse(**price_info)
@@ -57,12 +58,12 @@ def get_price(query: PriceQuery, db: Session = Depends(get_db)):
 @app.get("/get_matrix")
 def get_matrix(matrix_type: MatrixType, id: Optional[int] = None, db: Session = Depends(get_db)):
     if matrix_type == MatrixType.Base:
-        query = db.query(PriceMatrix)
+        query = db.query(BaselineMatrices)
     else:  # MatrixType.Discount
-        query = db.query(DiscountPriceMatrix)
+        query = db.query(DiscountMatrices)
 
     if id is not None:
-        query = query.filter_by(id=id)
+        query = query.filter_by(matrix_id=id)
 
     result = query.all()
     return [
