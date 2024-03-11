@@ -24,7 +24,7 @@ class PriceResponse(BaseModel):
     category_id: int
     user_segment_id: int
 
-
+# Заменить на цифры
 class MatrixType(str, Enum):
     Base = "Base"
     Discount = "Discount"
@@ -52,11 +52,6 @@ def get_price(query: PriceQuery, db: Session = Depends(get_db)):
 
     raise HTTPException(status_code=404, detail="Price not found")
 
-
-# @app.post("/post_matrix")
-# def post_matrix(request: PostMatrixRequest, db: Session = Depends(get_db)):
-#     # Надо реализовать добавление
-#     pass
 
 
 @app.get("/get_matrix")
