@@ -16,7 +16,8 @@ class FindPriceService:
 
     def find_price(self, db: Session, location_id: int, category_id: int, user_id: int, baseline_matrix_id: int) -> Optional[dict]:
         # Получаем ID сегментов пользователя
-        user_segments_ids = db.query(UserAvito.segment_id).filter(UserAvito.user_id == user_id).all()
+        user_segments_ids_query = db.query(UserAvito.segment_id).filter(UserAvito.user_id == user_id)
+        user_segments_ids = [id for (id,) in user_segments_ids_query]  # Преобразование в список ID
 
         # Получаем ID скидочных матриц для сегмента пользователя
         discount_matrices_ids = db.query(Segment.discount_matrix_id).filter(Segment.id.in_(user_segments_ids)).order_by(Segment.id.desc()).all()
@@ -24,9 +25,9 @@ class FindPriceService:
 
         for discount_matrix_id in discount_matrices_ids:
             location_to_check = location_id
-            category_to_check = category_id
             
             while location_to_check:
+                category_to_check = category_id
                 while category_to_check:
                     # Проверяем скидочную матрицу для сегмента пользователя
                     discount_matrix = db.query(DiscountMatrices).filter(

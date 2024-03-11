@@ -29,7 +29,7 @@ class BaselineMatrices(Base):
     category_id = Column(Integer, ForeignKey('categories.id'))
     price = Column(Integer)
     __table_args__ = (
-        UniqueConstraint('matrix_id', 'location_id', 'category_id', name='unique_matrix_location_category'),
+        UniqueConstraint('matrix_id', 'location_id', 'category_id', name='unique_baseline_matrix_location_category'),
     )
 
 
@@ -41,7 +41,7 @@ class DiscountMatrices(Base):
     category_id = Column(Integer, ForeignKey('categories.id'))
     price = Column(Integer)
     __table_args__ = (
-        UniqueConstraint('matrix_id', 'location_id', 'category_id', name='unique_matrix_location_category'),
+        UniqueConstraint('matrix_id', 'location_id', 'category_id', name='unique_discount_matrix_location_category'),
     )
 
 
@@ -53,7 +53,7 @@ class CalculatedPrices(Base):
     category_id = Column(Integer, ForeignKey('categories.id'))
     price = Column(Integer)
     __table_args__ = (
-        UniqueConstraint('discount_matrix_id', 'location_id', 'category_id', name='unique_discount_location_category'),
+        UniqueConstraint('discount_matrix_id', 'location_id', 'category_id', name='unique_calculated_matrix_location_category'),
     )
 
 

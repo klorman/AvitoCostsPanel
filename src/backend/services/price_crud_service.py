@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 
 class PriceCRUDService:
 
+
     @staticmethod
     def get_parent_location(db: Session, location_id: int) -> Optional[int]:
         return db.query(Location.parent_id).filter(Location.id == location_id).scalar()
@@ -67,7 +68,38 @@ class PriceCRUDService:
             valid_child_ids.extend(PriceCRUDService.find_category_child_for_price_update(db, category.id, category_id, discount_matrix_id))
   
 
-    def update_calculated_child_prices(self, db: Session, location_id: int, category_id: int, discount_matrix_id: int, price: int):
+    def find_price_by_discount_matrix(self, db: Session, location_id: int, category_id: int, discount_matrix_id: int) -> Optional[dict]:
+        location_to_check = location_id
+        
+        while location_to_check:
+            category_to_check = category_id
+            while category_to_check:
+                # Проверяем скидочную матрицу для сегмента пользователя
+                discount_matrix = db.query(DiscountMatrices).filter(
+                    DiscountMatrices.matrix_id == discount_matrix_id,
+                    DiscountMatrices.location_id == location_to_check,
+                    DiscountMatrices.category_id == category_to_check
+                ).first()
+                if discount_matrix:
+                    return discount_matrix.price
+                
+                category_to_check = self.get_parent_category(db, category_to_check)
+            location_to_check = self.get_parent_location(db, location_to_check)
+
+        # Если в скидочных нет, то ищем в базовой
+        baseline_matrix = db.query(BaselineMatrices).filter(
+            BaselineMatrices.matrix_id == self.baseline_matrix_id,
+            BaselineMatrices.location_id == location_id,
+            BaselineMatrices.category_id == category_id
+        ).first()
+        if baseline_matrix:
+            return baseline_matrix.price
+
+        # Если в базовой, вдруг, нет, то возвращаем None
+        return None
+
+
+    def update_calculated_child_prices(self, db: Session, location_id: int, category_id: int, discount_matrix_id: int, price: int, autocommit: bool = True):
         locations_ids = [location_id] + self.find_locations_for_price_update(db, location_id, category_id, discount_matrix_id)
 
         for current_location_id in locations_ids:
@@ -80,7 +112,8 @@ class PriceCRUDService:
                 ).first()
                 calculated_price.price = price
 
-        db.commit()
+        if autocommit:
+            db.commit()
 
 
     def create_discount_price(self, db: Session, location_id: int, category_id: int, discount_matrix_id: int, price: int):
@@ -91,7 +124,7 @@ class PriceCRUDService:
             price = price
         )
         db.add(new_discount_price) # Если уже есть, будет ошибка
-        db.commit()
+        #db.commit()
 
         self.update_calculated_child_prices(db, location_id, category_id, discount_matrix_id, price)
 
@@ -105,7 +138,7 @@ class PriceCRUDService:
         
         if discount_price:
             discount_price.price = price
-            db.commit()
+            #db.commit()
 
             self.update_calculated_child_prices(db, location_id, category_id, discount_matrix_id, price)
 
@@ -119,40 +152,25 @@ class PriceCRUDService:
         
         if discount_price:
             db.delete(discount_price)
-            db.commit()
+            #db.commit()
 
-            parent_location_id = self.get_parent_location(db, location_id)
-            parent_category_id = self.get_parent_category(db, category_id)
-            price = self.get_price_by_discount_matrix(
-                db, 
-                parent_location_id if parent_location_id is not None else location_id, 
-                parent_category_id if parent_category_id is not None else category_id, 
-                discount_matrix_id
-            )
-            if parent_category_id is None and parent_location_id is None:
-                price = None
+            price = self.find_price_by_discount_matrix(db, location_id, category_id, discount_matrix_id)
             self.update_calculated_child_prices(db, location_id, category_id, discount_matrix_id, price)
 
 
-    def update_baseline_price(self, db: Session, location_id: int, category_id: int, baseline_matrix_id: int, price: int):
-        baseline_price = db.query(BaselineMatrices).filter(
-            BaselineMatrices.matrix_id == baseline_matrix_id,
-            BaselineMatrices.location_id == location_id,
-            BaselineMatrices.category_id == category_id
-        ).first()
-        
-        if baseline_price:
-            baseline_price.price = price
-            db.commit()
-            
+    def init_calculated_prices(self, db: Session, baseline_matrix_id: int):
+        self.baseline_matrix_id = baseline_matrix_id
 
-    def get_price_by_discount_matrix(self, db: Session, location_id: int, category_id: int, discount_matrix_id: int) -> Optional[int]:
-        return db.query(CalculatedPrices.price).filter(
-            CalculatedPrices.discount_matrix_id == discount_matrix_id,
-            CalculatedPrices.location_id == location_id,
-            CalculatedPrices.category_id == category_id
-        ).first()
-        
+        db.query(CalculatedPrices).delete()
+
+        # TODO придумать более быстрый способ инициализации
+        discount_matrices = db.query(DiscountMatrices).all()
+
+        for line in discount_matrices:
+            self.update_calculated_child_prices(db, line.location_id, line.category_id, line.matrix_id, autocommit=False)
+
+        db.commit()
+            
 
     def get_price(self, db: Session, location_id: int, category_id: int, user_id: int) -> Optional[int]:
         # Получаем ID сегментов пользователя
@@ -163,10 +181,15 @@ class PriceCRUDService:
         discount_matrices_ids = [dm[0] for dm in discount_matrices_ids]  # Преобразование в список ID
 
         for discount_matrix_id in discount_matrices_ids:
-            calculated_price = self.get_price_by_discount_matrix(db, location_id, category_id, discount_matrix_id)
+            calculated_price = db.query(CalculatedPrices.price).filter(
+                CalculatedPrices.discount_matrix_id == discount_matrix_id,
+                CalculatedPrices.location_id == location_id,
+                CalculatedPrices.category_id == category_id
+            ).first()
             if calculated_price:
                 return {
                     "price": calculated_price
                 }
         
         return None
+    
