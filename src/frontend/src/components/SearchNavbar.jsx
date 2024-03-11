@@ -2,11 +2,10 @@ import React from 'react'
 import classes from './SearchNavbar.module.css'
 import TreeNavbar from './TreeNavbar'
 import Select from './UI/Select'
+import LocationLabel from './UI/LocationLabel'
+import MatrixLabel from './UI/MatrixLabel'
 
 export default function SearchNavbar() {
-
-
-
     return (
         <div className={classes.hero}>
             <div className={classes.content}>
@@ -29,7 +28,9 @@ export default function SearchNavbar() {
                     </a>
                 </div>
                 <TreeNavbar />
-                <Select list={ ['Новосибирск', 'Омск', 'Казань', 'Куйбышев' ] } />
+                <div style={ {width: '700px'} }></div>
+                <Select list={ ['baseline1', 'baseline2' ] } label= { MatrixLabel } disabled={ false } />
+                <Select list={ ['Новосибирск', 'Омск', 'Казань', 'Куйбышев' ] } label= { LocationLabel }  disabled={ true } />
             </div>
         </div>
     )

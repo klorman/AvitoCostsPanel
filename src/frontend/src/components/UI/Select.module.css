@@ -12,6 +12,13 @@
     filter: invert(22%) sepia(95%) saturate(6761%) hue-rotate(357deg) brightness(99%) contrast(118%);
 }
 
+.disabled
+{
+    cursor: pointer;
+    color: grey !important;
+    filter: invert(57%) sepia(5%) saturate(15%) hue-rotate(5deg) brightness(87%) contrast(91%);
+}
+
 .icon
 {
     transform: translateY(-1px);
