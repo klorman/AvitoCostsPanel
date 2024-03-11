@@ -9,7 +9,8 @@ class FindPriceService:
     @staticmethod
     def get_parent_location(db: Session, location_id: int) -> Optional[int]:
         return db.query(Location.parent_id).filter(Location.id == location_id).scalar()
-
+    
+    
     @staticmethod
     def get_parent_category(db: Session, category_id: int) -> Optional[int]:
         return db.query(Category.parent_id).filter(Category.id == category_id).scalar()
