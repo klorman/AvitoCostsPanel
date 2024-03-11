@@ -112,4 +112,5 @@ VALUES
     ('Запчасти и аксессуары', (SELECT id FROM categories WHERE name = 'Транспорт')),
     ('Грузовики и спецтехника', (SELECT id FROM categories WHERE name = 'Транспорт')),
     ('Водный транспорт', (SELECT id FROM categories WHERE name = 'Транспорт')),
-    ('Мотоциклы и мототехника', (SELECT id FROM categories WHERE name = 'Транспорт'));
+    ('Мотоциклы и мототехника', (SELECT id FROM categories WHERE name = 'Транспорт')),
+    ('Электролет', (SELECT id FROM categories WHERE name = 'Транспорт'));

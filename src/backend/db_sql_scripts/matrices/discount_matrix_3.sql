@@ -1,2 +1,2 @@
-insert into discount_price_matrix (category_id , location_id, price)
-values  (1, 1, 1);
+insert into discount_matrices (matrix_id, category_id , location_id, price)
+values  (2, 1, 1, 1);
