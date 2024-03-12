@@ -5,6 +5,7 @@ from fastapi import FastAPI, HTTPException, Depends
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
 
 from models import engine, UserAvito, BaselineMatrices, DiscountMatrices, Location
 from services.findPriceService import FindPriceService
@@ -13,6 +14,31 @@ from services.price_crud_service import PriceCRUDService
 app = FastAPI()
 find_price_service = FindPriceService()
 crud_service = PriceCRUDService()
+
+
+CORS_ALLOW_METHODS = [
+    'GET',
+    'POST',
+    'PATCH',
+    'PUT',
+    'DELETE'
+]
+
+CORS_ALLOW_HEADERS = [
+    'Content-Type',
+    'Set-Cookie',
+    'Access-Control-Allow-Headers',
+    'Access-Control-Allow-Origin',
+    'Authorization'
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=CORS_ALLOW_METHODS,
+    allow_headers=CORS_ALLOW_HEADERS,
+)
 
 
 class PriceQuery(BaseModel):
@@ -102,8 +128,8 @@ def get_new_price_func(db: Session = Depends(get_db), location: Optional[int] = 
 def get_matrix(db: Session = Depends(get_db)):
     baseline_matrices = db.query(BaselineMatrices.matrix_id).distinct().all()
     discount_matrices = db.query(DiscountMatrices.matrix_id).distinct().all()
-    result = [{"matrix_id": m[0], "matrix_type": "Base"} for m in baseline_matrices] + \
-             [{"matrix_id": m[0], "matrix_type": "Discount"} for m in discount_matrices]
+    result = [{"id": m[0], "matrix_type": "Base"} for m in baseline_matrices] + \
+             [{"id": m[0], "matrix_type": "Discount"} for m in discount_matrices]
     return result
 
 
@@ -120,7 +146,7 @@ def get_location(matrix_id: int, matrix_type: int, db: Session = Depends(get_db)
                                                                        matrix_model.location_id == Location.id).filter(
         matrix_model.matrix_id == matrix_id).distinct().all()
 
-    return [{"loc_id": loc[0], "loc_name": loc[1]} for loc in locations]
+    return [{"id": loc[0], "name": loc[1]} for loc in locations]
 
 # @app.get("/get_locs", response_model=List[dict])
 # def get_locs(request: GetLocationsRequest, db: Session = Depends(get_db)):
