@@ -37,7 +37,7 @@ export default function SearchNavbar() {
                 </div>
                 <TreeNavbar />
                 <Select list={ namedMatrices } label= { MatrixLabel } disabled={ false } onSelect={ (index) => setCurMatrix(matrices[index]) } />
-                <Select list={ namedLocations } label= { LocationLabel }  disabled={ !curMatrix } />
+                <Select list={ namedLocations } label= { LocationLabel }  disabled={ !curMatrix } onSelect={ (index) => {} } />
             </div>
         </div>
     )

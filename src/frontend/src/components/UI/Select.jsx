@@ -23,8 +23,8 @@ export default function Select(props) {
                 onChange={ (e) => setFilter(e.target.value) } 
                 />
                 <ul>
-                    { filteredList.slice(0, Math.min(3, filteredList.length)).map((line, index) => (
-                        <li onClick={ () => props.onSelect(0) } key={index}>{ line }</li>
+                    { filteredList.slice(0, Math.min(5, filteredList.length)).map((line, index) => (
+                        <li onClick={ () => { props.onSelect(index); setListVisible(!listVisible) } } key={index}>{ line }</li>
                     )) 
                     }
                 </ul>
