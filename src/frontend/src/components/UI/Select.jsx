@@ -40,7 +40,7 @@ export default function Select(props) {
                 />
                 <ul>
                     { filteredList.slice(0, Math.min(5, filteredList.length)).map((wrapper, index) => (
-                        <li onClick={ () => { props.onSelect(wrapper); setListVisible(!listVisible) } } key={index}>{ wrapper.body }</li>
+                        <li onClick={ () => { props.onSelect(wrapper); setListVisible(!listVisible) } } key={index}><strong>{wrapper.body.slice(0, filter.length)}</strong>{ wrapper.body.slice(filter.length) }</li>
                     )) 
                     }
                 </ul>
