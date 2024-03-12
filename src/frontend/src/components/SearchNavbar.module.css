@@ -1,0 +1,19 @@
+.hero
+{
+    box-shadow: 0 10px 10px -10px rgba(0, 0, 0, .1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+}
+
+.content
+{
+    width: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

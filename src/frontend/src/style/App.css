@@ -4,7 +4,7 @@
     padding: 0;
     font-family: Arial, sans-serif;
 }
-body, html {
+body, html, #root, .App {
     background-color: #f0f2f5;
     height: 100%;
     width: 100%;

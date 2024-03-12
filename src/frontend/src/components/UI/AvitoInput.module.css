@@ -1,0 +1,27 @@
+.hero
+{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+input
+{
+    border-radius: 3px;
+    background-color: transparent;
+    height: 32px;
+    border: 1px solid #cccccc;
+    width: 80%;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    box-sizing: border-box;
+    padding-left: 9px;
+}
+
+input:focus
+{
+    background-color: #f0f2f5;
+    outline: 2px solid #D6F1FF;
+    outline-offset: 0px;
+    border: 1px solid #cccccc;
+}
