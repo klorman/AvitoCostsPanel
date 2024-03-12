@@ -12,7 +12,7 @@ export default function SearchNavbar() {
     const { namedMatrices, matrices } = useMatrix()
     
     const [curLocation, setCurLocation] = useState()
-    const { namedLocations } = useLocation(curMatrix)
+    const { namedLocations, locations } = useLocation(curMatrix)
 
     return (
         <div className={classes.hero}>
@@ -37,7 +37,7 @@ export default function SearchNavbar() {
                 </div>
                 <TreeNavbar />
                 <Select list={ namedMatrices } label= { MatrixLabel } disabled={ false } onSelect={ (index) => setCurMatrix(matrices[index]) } />
-                <Select list={ namedLocations } label= { LocationLabel }  disabled={ !curMatrix } onSelect={ (index) => {} } />
+                <Select list={ namedLocations } label= { LocationLabel }  disabled={ !curMatrix } onSelect={ (index) => { setCurLocation(matrices[index]) } } />
             </div>
         </div>
     )

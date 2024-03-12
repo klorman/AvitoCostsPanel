@@ -40,7 +40,7 @@ export default function useMatrix() {
                 }
             })
         }
-        return result.sort().reverse()
+        return result
     }, [matrices])
     return {
         namedMatrices,

@@ -40,6 +40,7 @@ export default function useLocation(matrix: Matrix) {
         return result
     }, [locations])
     return {
-        namedLocations
+        namedLocations,
+        locations
     }
 }

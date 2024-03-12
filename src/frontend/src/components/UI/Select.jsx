@@ -10,10 +10,26 @@ export default function Select(props) {
             return props.list.filter(line => line.toLowerCase().startsWith(filter.toLowerCase()))
         }
     }, [props.list, filter])
+    const handleKeyUp = (e) => {
+        if (e.key === 'Escape') {
+            setListVisible(false)
+            document.removeEventListener('keyup', handleKeyUp)
+        }
+    }
 
     return (
         <div className={ classes.content }>
-            { <props.label onClick={ () => setListVisible(!listVisible) } disabled={ props.disabled } /> }
+            { <props.label 
+                onClick={() => {
+                    if(!listVisible) {
+                        document.addEventListener('keyup', handleKeyUp)
+                    }
+                    else {
+                        document.removeEventListener('keyup', handleKeyUp)
+                    }
+                    setListVisible(!listVisible)
+                }} 
+                disabled={ props.disabled } /> }
             {listVisible?
             <div className={ classes.list }>
                 <AvitoInput 
