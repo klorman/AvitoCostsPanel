@@ -1,6 +1,6 @@
 from typing import Optional, List
 
-from src.backend.models import BaselineMatrices, Category, Location, DiscountMatrices, Segment, UserAvito, \
+from models import BaselineMatrices, Category, Location, DiscountMatrices, Segment, UserAvito, \
     CalculatedPrices
 from sqlalchemy.orm import Session
 
