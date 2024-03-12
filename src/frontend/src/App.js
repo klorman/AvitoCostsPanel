@@ -7,7 +7,7 @@ import acceptSettings from "./settings";
 
 export default function App() {
   acceptSettings()
-  const [isAuth, setIsAuth] = useState(false)
+  const [isAuth, setIsAuth] = useState(true)
   return (
     <div className="App">
       <AuthContext.Provider
