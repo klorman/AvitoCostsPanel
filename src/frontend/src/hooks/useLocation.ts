@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { Matrix, Location } from "../types.ts";
+import { Matrix, Location, MatrixType } from "../types.ts";
+import axios from "axios";
+import { globalEnv } from "../env.js";
 
 
 export default function useLocation(matrix: Matrix) {
@@ -7,7 +9,20 @@ export default function useLocation(matrix: Matrix) {
 
     useEffect(() => {
         const getLocations = async (matrix: Matrix): Promise<Location[]> => {
-            return [{ id: 1, name: "Russia" }]
+            if (!matrix) {
+                return []
+            }
+            const params = new URLSearchParams()
+            params.append('matrix_id', `${matrix.id}`)
+            params.append('matrix_type', `${matrix.type}`)
+            const resp = await axios.get(globalEnv.apiEndpoint + '/location?' + params.toString()).catch(() => {})
+            let res: Location[] = []
+            if (resp){
+                resp.data.forEach(location => {
+                    res.push({ id: matrix.id, name: location.name })
+                });
+            }
+            return res
         } 
 
         getLocations(matrix).then((res) => {
@@ -22,7 +37,7 @@ export default function useLocation(matrix: Matrix) {
                 result.push(location.name)
             })
         }
-        return result   
+        return result
     }, [locations])
     return {
         namedLocations

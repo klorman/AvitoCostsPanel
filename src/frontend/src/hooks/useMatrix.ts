@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import axios from 'axios'
+import { globalEnv } from '../env'
 import { MatrixType, Matrix } from "../types.ts";
 
 
@@ -10,7 +11,14 @@ export default function useMatrix() {
 
     useEffect(() => {
         const getMatrices = async (): Promise<Matrix[]> => {
-            return [{ id: 1, type: MatrixType.Base }]
+            const resp = await axios.get(globalEnv.apiEndpoint + '/matrix').catch(() => {})
+            let res: Matrix[] = []
+            if (resp){
+                resp.data.forEach(matrix => {
+                    res.push({ id: matrix.id, type: matrix.type === 'Base'? MatrixType.Base: MatrixType.Discount })
+                });
+            }
+            return res
         } 
 
         getMatrices().then((matrices) => {
@@ -32,7 +40,7 @@ export default function useMatrix() {
                 }
             })
         }
-        return result
+        return result.sort().reverse()
     }, [matrices])
     return {
         namedMatrices,
