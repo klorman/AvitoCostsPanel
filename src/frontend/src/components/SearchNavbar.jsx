@@ -6,6 +6,7 @@ import MatrixLabel from './UI/MatrixLabel'
 import useMatrix from '../hooks/useMatrix.ts'
 import useLocation from '../hooks/useLocation.ts'
 import { useState } from 'react'
+import { MatrixType } from '../types.ts'
 
 export default function SearchNavbar() {
     const [curMatrix, setCurMatrix] = useState()
@@ -13,6 +14,7 @@ export default function SearchNavbar() {
     
     const [curLocation, setCurLocation] = useState()
     const { namedLocations, locations } = useLocation(curMatrix)
+    console.log(curLocation)
 
     return (
         <div className={classes.hero}>
@@ -36,8 +38,16 @@ export default function SearchNavbar() {
                     </a>
                 </div>
                 <TreeNavbar />
-                <Select list={ namedMatrices } label= { MatrixLabel } disabled={ false } onSelect={ (index) => setCurMatrix(matrices[index]) } />
-                <Select list={ namedLocations } label= { LocationLabel }  disabled={ !curMatrix } onSelect={ (index) => { setCurLocation(matrices[index]) } } />
+                <Select 
+                list={ namedMatrices } 
+                label= { MatrixLabel } 
+                disabled={ false } 
+                onSelect={ (wrapper) => { 
+                    let type = wrapper.body[0] === 'b'? MatrixType.Base: MatrixType.Discount
+                    setCurMatrix({ id: wrapper.id, type: type }) 
+                }} 
+                />
+                <Select list={ namedLocations } label= { LocationLabel }  disabled={ !curMatrix } onSelect={ (wrapper) => { setCurLocation({ name: wrapper.body, id: wrapper.id }) } } />
             </div>
         </div>
     )

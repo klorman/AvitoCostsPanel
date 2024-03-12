@@ -19,7 +19,7 @@ export default function useLocation(matrix: Matrix) {
             let res: Location[] = []
             if (resp){
                 resp.data.forEach(location => {
-                    res.push({ id: matrix.id, name: location.name })
+                    res.push({ id: location.id, name: location.name })
                 });
             }
             return res
@@ -31,10 +31,10 @@ export default function useLocation(matrix: Matrix) {
     }, [matrix])
 
     const namedLocations = useMemo(() => {
-        let result: string[] = []
+        let result: { body: string, id: number }[] = []
         if (locations) {
             locations.forEach((location) => {
-                result.push(location.name)
+                result.push({ body: location.name ?? `${location.id}`, id: location.id })
             })
         }
         return result

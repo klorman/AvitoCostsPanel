@@ -29,18 +29,18 @@ export default function useMatrix() {
     }, [state])
 
     const namedMatrices = useMemo(() => {
-        let result: string[] = []
+        let result: { body: string, id: number }[] = []
         if (matrices) {
             matrices.forEach((matrix) => {
                 if (matrix.type === MatrixType.Base) {
-                    result.push(`baseline_${matrix.id}`)
+                    result.push({ body: `baseline_${matrix.id}`, id: matrix.id })
                 }
                 else {
-                    result.push(`discount_${matrix.id}`)
+                    result.push({ body: `discount_${matrix.id}`, id: matrix.id })
                 }
             })
         }
-        return result
+        return result.sort((f, s) => f.body.localeCompare(s.body)).reverse()
     }, [matrices])
     return {
         namedMatrices,
