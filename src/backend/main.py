@@ -1,6 +1,8 @@
+import json
 from enum import Enum
 from typing import Optional, List
 
+import aioredis
 from fastapi import FastAPI, HTTPException, Depends
 from sqlalchemy import func
 from sqlalchemy.orm import Session
@@ -83,15 +85,35 @@ def get_db():
         db.close()
 
 
+REDIS_URL = "redis://localhost:6379"
+redis = aioredis.from_url(REDIS_URL, encoding="utf-8", decode_responses=True)
+
+
+async def get_redis() -> aioredis.Redis:
+    try:
+        yield redis
+    finally:
+        await redis.close()
+
+
 @app.get("/get-price", response_model=PriceResponse)
-def get_price(query: PriceQuery, db: Session = Depends(get_db)):
+async def get_price(query: PriceQuery, db: Session = Depends(get_db), redis: aioredis.Redis = Depends(get_redis)):
+    cache_key = f"price:{query.location_id}:{query.category_id}:{query.user_id}"
+    cached_price = await redis.get(cache_key)
+
+    if cached_price:
+        return PriceResponse(**json.loads(cached_price))
+
+    # Если данных в кэше нет, выполнить запрос к базе данных
     user = db.query(UserAvito).filter(UserAvito.user_id == query.user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
+
     max_matrix_id = db.query(func.max(BaselineMatrices.matrix_id)).scalar()
     price_info = find_price_service.find_price(db, query.location_id, query.category_id, user.user_id, max_matrix_id)
 
     if price_info:
+        await redis.set(cache_key, json.dumps(price_info), ex=20)
         return PriceResponse(**price_info)
 
     raise HTTPException(status_code=404, detail="Price not found")
@@ -152,6 +174,7 @@ def get_location(matrix_id: int, matrix_type: int, db: Session = Depends(get_db)
         matrix_model.matrix_id == matrix_id).distinct().all()
 
     return [{"id": loc[0], "name": loc[1]} for loc in locations]
+
 
 @app.get("/categories", response_model=List[CategoryResponse])
 def get_categories(db: Session = Depends(get_db)):
