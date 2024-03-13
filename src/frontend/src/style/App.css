@@ -1,10 +1,13 @@
-* 
-{
+* {
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
+    font-family: Manrope, Arial, 'Helvetica Neue', Helvetica, 'Arial Rub', sans-serif;
 }
-body, html, #root, .App {
+
+body,
+html,
+#root,
+.App {
     background-color: #f0f2f5;
     height: 100%;
     width: 100%;

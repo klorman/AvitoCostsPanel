@@ -1,5 +1,4 @@
-.hero
-{
+.hero {
     box-shadow: 0 10px 10px -10px rgba(0, 0, 0, .1);
     position: fixed;
     top: 0;
@@ -10,8 +9,7 @@
     justify-content: center;
 }
 
-.content
-{
+.content {
     width: 80%;
     display: flex;
     align-items: center;

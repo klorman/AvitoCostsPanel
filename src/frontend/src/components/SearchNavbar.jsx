@@ -1,5 +1,5 @@
 import classes from './SearchNavbar.module.css'
-import TreeNavbar from './TreeNavbar'
+import TreeSelect from './UI/TreeSelect.jsx'
 import Select from './UI/Select'
 import LocationLabel from './UI/LocationLabel'
 import MatrixLabel from './UI/MatrixLabel'
@@ -11,7 +11,7 @@ import { MatrixType } from '../types.ts'
 export default function SearchNavbar() {
     const [curMatrix, setCurMatrix] = useState()
     const { namedMatrices, matrices } = useMatrix()
-    
+
     const [curLocation, setCurLocation] = useState()
     const { namedLocations, locations } = useLocation(curMatrix)
     console.log(curLocation)
@@ -20,11 +20,11 @@ export default function SearchNavbar() {
         <div className={classes.hero}>
             <div className={classes.content}>
                 <div className={classes.avitoLabel}>
-                    <a 
-                    href="/" 
-                    title="Авито — сайт объявлений"
-                    data-marker="search-form/logo"
-                    marker="search-form/logo"
+                    <a
+                        href="/"
+                        title="Авито — сайт объявлений"
+                        data-marker="search-form/logo"
+                        marker="search-form/logo"
                     >
                         <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <circle cx="10.595" cy="5.225" r="3.325" fill="#965EEB"></circle>
@@ -37,17 +37,22 @@ export default function SearchNavbar() {
                         </svg>
                     </a>
                 </div>
-                <TreeNavbar />
-                <Select 
-                list={ namedMatrices } 
-                label= { MatrixLabel } 
-                disabled={ false } 
-                onSelect={ (wrapper) => { 
-                    let type = wrapper.body[0] === 'b'? MatrixType.Base: MatrixType.Discount
-                    setCurMatrix({ id: wrapper.id, type: type }) 
-                }} 
+                <TreeSelect disabled={false} />
+                <Select
+                    list={namedMatrices}
+                    label={MatrixLabel}
+                    disabled={false}
+                    onSelect={(wrapper) => {
+                        let type = wrapper.body[0] === 'b' ? MatrixType.Base : MatrixType.Discount
+                        setCurMatrix({ id: wrapper.id, type: type })
+                    }}
                 />
-                <Select list={ namedLocations } label= { LocationLabel }  disabled={ !curMatrix } onSelect={ (wrapper) => { setCurLocation({ name: wrapper.body, id: wrapper.id }) } } />
+                <Select
+                    list={namedLocations}
+                    label={LocationLabel}
+                    disabled={!curMatrix}
+                    onSelect={(wrapper) => { setCurLocation({ name: wrapper.body, id: wrapper.id }) }}
+                />
             </div>
         </div>
     )
