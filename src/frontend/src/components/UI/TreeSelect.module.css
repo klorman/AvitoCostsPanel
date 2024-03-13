@@ -1,3 +1,5 @@
+.content {}
+
 .label {
     display: flex;
     flex-direction: row;
@@ -10,11 +12,10 @@
 
 .disabled {
     cursor: pointer;
-    color: grey;
+    background-color: grey;
     display: flex;
     flex-direction: row;
     gap: 4px;
-    filter: invert(57%) sepia(5%) saturate(15%) hue-rotate(5deg) brightness(87%) contrast(91%);
 }
 
 .icon {
@@ -88,4 +89,58 @@ button {
 button:hover {
     cursor: pointer;
     background-color: #0099f7;
+}
+
+
+.menu {
+    padding: 20px;
+    overflow: auto;
+    margin-left: -10px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    background-color: #f0f2f5;
+    position: absolute;
+    top: 60px;
+    left: 10%;
+    width: 80%;
+    box-sizing: border-box;
+    box-shadow: 0 10px 10px 0px rgba(0, 0, 0, .1);
+}
+
+.categoryContainer {
+    box-sizing: border-box;
+    display: flex;
+}
+
+.categoryName {
+    display: flex;
+    border-radius: 6px;
+    align-items: center;
+    height: 42px;
+    padding-right: 10px;
+    padding-left: 10px;
+    width: 20%;
+}
+
+.categoryName:hover {
+    background: #ccc;
+}
+
+.subcategoriesContainer {
+    top: 20px;
+    position: absolute;
+    padding: 10px;
+    right: 0;
+    z-index: 1;
+    margin-left: auto;
+    width: calc(100% - 300px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+.subcategory {
+    vertical-align: top;
 }

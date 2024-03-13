@@ -38,21 +38,24 @@ export default function SearchNavbar() {
                     </a>
                 </div>
                 <TreeSelect disabled={false} />
-                <Select
-                    list={namedMatrices}
-                    label={MatrixLabel}
-                    disabled={false}
-                    onSelect={(wrapper) => {
-                        let type = wrapper.body[0] === 'b' ? MatrixType.Base : MatrixType.Discount
-                        setCurMatrix({ id: wrapper.id, type: type })
-                    }}
-                />
-                <Select
-                    list={namedLocations}
-                    label={LocationLabel}
-                    disabled={!curMatrix}
-                    onSelect={(wrapper) => { setCurLocation({ name: wrapper.body, id: wrapper.id }) }}
-                />
+                <div className={classes.baseSelect}>
+                    <Select
+                        list={namedMatrices}
+                        label={MatrixLabel}
+                        disabled={false}
+                        onSelect={(wrapper) => {
+                            let type = wrapper.body[0] === 'b' ? MatrixType.Base : MatrixType.Discount
+                            setCurMatrix({ id: wrapper.id, type: type })
+                        }}
+                    />
+                    <Select
+                        list={namedLocations}
+                        label={LocationLabel}
+                        disabled={!curMatrix}
+                        onSelect={(wrapper) => { setCurLocation({ name: wrapper.body, id: wrapper.id }) }}
+                    />
+                </div>
+
             </div>
         </div>
     )
