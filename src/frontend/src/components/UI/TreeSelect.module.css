@@ -1,0 +1,146 @@
+.content {}
+
+.label {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+}
+
+.label:hover {
+    cursor: pointer;
+}
+
+.disabled {
+    cursor: pointer;
+    background-color: grey;
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+}
+
+.icon {
+    transform: translateY(-1px);
+}
+
+.list {
+    padding-bottom: 5px;
+    background-color: #f0f2f5;
+    transform: translate(-60px, 10px);
+    width: 300px;
+    min-height: 100px;
+    position: absolute;
+    margin-top: 10px;
+    box-shadow: 0 10px 10px -10px rgba(0, 0, 0, .1);
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.list ul {
+    width: 80%;
+    background-color: #f0f2f5;
+    position: relative;
+    top: -6px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    list-style-type: none;
+    box-shadow: 0 1px 3px 0 #9b9b9b;
+    box-sizing: border-box;
+}
+
+.list li {
+    box-sizing: border-box;
+    width: 100%;
+    padding-left: 9px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+
+.list li:hover {
+    background-color: #D6F1FF;
+    cursor: pointer;
+}
+
+.avitoInput {
+    margin-bottom: 7px;
+}
+
+button {
+    background-color: #00aaff;
+    color: white;
+    border-radius: 6px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: transparent;
+    width: 150px;
+    min-height: 40px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    box-sizing: border-box;
+    outline: none;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+button:hover {
+    cursor: pointer;
+    background-color: #0099f7;
+}
+
+
+.menu {
+    padding: 20px;
+    overflow: auto;
+    margin-left: -10px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    background-color: #f0f2f5;
+    position: absolute;
+    top: 60px;
+    left: 10%;
+    width: 80%;
+    box-sizing: border-box;
+    box-shadow: 0 10px 10px 0px rgba(0, 0, 0, .1);
+}
+
+.categoryContainer {
+    box-sizing: border-box;
+    display: flex;
+}
+
+.categoryName {
+    display: flex;
+    border-radius: 6px;
+    align-items: center;
+    height: 42px;
+    padding-right: 10px;
+    padding-left: 10px;
+    width: 20%;
+}
+
+.categoryName:hover {
+    background: #ccc;
+}
+
+.subcategoriesContainer {
+    top: 20px;
+    position: absolute;
+    padding: 10px;
+    right: 0;
+    z-index: 1;
+    margin-left: auto;
+    width: calc(100% - 300px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+.subcategory {
+    vertical-align: top;
+}

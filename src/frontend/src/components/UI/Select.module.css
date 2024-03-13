@@ -1,31 +1,32 @@
-.label
-{
+.label {
     display: flex;
     flex-direction: row;
     gap: 4px;
+    user-select: none;
 }
 
-.label:hover
-{
+.label:hover {
     cursor: pointer;
     color: red;
     filter: invert(22%) sepia(95%) saturate(6761%) hue-rotate(357deg) brightness(99%) contrast(118%);
+    user-select: none;
 }
 
-.disabled
-{
+.disabled {
+    user-select: none;
     cursor: pointer;
     color: grey;
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
     filter: invert(57%) sepia(5%) saturate(15%) hue-rotate(5deg) brightness(87%) contrast(91%);
 }
 
-.icon
-{
+.icon {
     transform: translateY(-1px);
 }
 
-.list
-{
+.list {
     padding-bottom: 5px;
     background-color: #f0f2f5;
     transform: translate(-60px, 10px);
@@ -39,12 +40,11 @@
     flex-direction: column;
 }
 
-.list ul
-{
+.list ul {
     width: 80%;
     background-color: #f0f2f5;
     position: relative;
-    top: -6px;   
+    top: -6px;
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -53,8 +53,7 @@
     box-sizing: border-box;
 }
 
-.list li
-{
+.list li {
     box-sizing: border-box;
     width: 100%;
     padding-left: 9px;
@@ -62,13 +61,11 @@
     padding-bottom: 7px;
 }
 
-.list li:hover
-{
+.list li:hover {
     background-color: #D6F1FF;
     cursor: pointer;
 }
 
-.avitoInput
-{
+.avitoInput {
     margin-bottom: 7px;
 }

@@ -1,5 +1,4 @@
-.hero
-{
+.hero {
     box-shadow: 0 10px 10px -10px rgba(0, 0, 0, .1);
     position: fixed;
     top: 0;
@@ -10,10 +9,16 @@
     justify-content: center;
 }
 
-.content
-{
+.content {
     width: 80%;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 30px;
+    height: 60px;
+}
+
+.baseSelect {
+    gap: 70px;
+    display: flex;
+    margin-left: auto;
 }

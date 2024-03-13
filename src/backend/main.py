@@ -7,14 +7,13 @@ from sqlalchemy.orm import Session
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 
-from models import engine, UserAvito, BaselineMatrices, DiscountMatrices, Location
+from models import engine, UserAvito, BaselineMatrices, DiscountMatrices, Location, Category
 from services.findPriceService import FindPriceService
 from services.price_crud_service import PriceCRUDService
 
 app = FastAPI()
 find_price_service = FindPriceService()
 crud_service = PriceCRUDService()
-
 
 CORS_ALLOW_METHODS = [
     'GET',
@@ -55,19 +54,25 @@ class PriceResponse(BaseModel):
 
 
 class MatrixResponse(BaseModel):
-    matrix_id: int
-    matrix_type: str
+    id: int
+    type: str
 
 
 class LocationResponse(BaseModel):
-    loc_id: int
-    loc_name: str
+    id: int
+    name: str
 
 
 # Заменить на цифры
 class MatrixType(str, Enum):
     Base = 0
     Discount = 1
+
+
+class CategoryResponse(BaseModel):
+    id: int
+    name: str
+    parent_id: Optional[int] = None
 
 
 def get_db():
@@ -128,8 +133,8 @@ def get_new_price_func(db: Session = Depends(get_db), location: Optional[int] = 
 def get_matrix(db: Session = Depends(get_db)):
     baseline_matrices = db.query(BaselineMatrices.matrix_id).distinct().all()
     discount_matrices = db.query(DiscountMatrices.matrix_id).distinct().all()
-    result = [{"id": m[0], "matrix_type": "Base"} for m in baseline_matrices] + \
-             [{"id": m[0], "matrix_type": "Discount"} for m in discount_matrices]
+    result = [{"id": m[0], "type": "Base"} for m in baseline_matrices] + \
+             [{"id": m[0], "type": "Discount"} for m in discount_matrices]
     return result
 
 
@@ -148,11 +153,7 @@ def get_location(matrix_id: int, matrix_type: int, db: Session = Depends(get_db)
 
     return [{"id": loc[0], "name": loc[1]} for loc in locations]
 
-# @app.get("/get_locs", response_model=List[dict])
-# def get_locs(request: GetLocationsRequest, db: Session = Depends(get_db)):
-#     pass
-#
-#
-# @app.get("/get_cats", response_model=List[dict])
-# def get_cats(request: GetCategoriesRequest, db: Session = Depends(get_db)):
-#     pass
+@app.get("/categories", response_model=List[CategoryResponse])
+def get_categories(db: Session = Depends(get_db)):
+    categories = db.query(Category).all()
+    return categories
