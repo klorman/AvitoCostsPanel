@@ -1,3 +1,4 @@
+import json
 from enum import Enum
 from typing import Optional, List
 
@@ -83,8 +84,8 @@ def get_db():
         db.close()
 
 
-@app.get("/get-price", response_model=PriceResponse)
-def get_price(query: PriceQuery, db: Session = Depends(get_db)):
+@app.post("/get-price", response_model=PriceResponse)
+def count_price(query: PriceQuery, db: Session = Depends(get_db)):
     user = db.query(UserAvito).filter(UserAvito.user_id == query.user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -114,14 +115,14 @@ def get_matrix(matrix_type: MatrixType, id: Optional[int] = None, db: Session = 
 
 
 @app.get("/count_prices_test")
-def count_prices(db: Session = Depends(get_db), id: Optional[int] = None):
-    crud_service.init_calculated_prices(db, id)
+def count_prices(db: Session = Depends(get_db), baseline_matrix_id: Optional[int] = None):
+    crud_service.init_calculated_prices(db, baseline_matrix_id)
 
 
 @app.get("/get_new_price_func_test")
-def get_new_price_func(db: Session = Depends(get_db), location: Optional[int] = None, category: Optional[int] = None,
+def get_new_price_func(db: Session = Depends(get_db), location_id: Optional[int] = None, category_id: Optional[int] = None,
                        user_id: Optional[int] = None):
-    price = crud_service.get_price(db, location, category, user_id)
+    price = crud_service.get_price(db, location_id, category_id, user_id)
     return [
         {
             "price": price
@@ -152,6 +153,7 @@ def get_location(matrix_id: int, matrix_type: int, db: Session = Depends(get_db)
         matrix_model.matrix_id == matrix_id).distinct().all()
 
     return [{"id": loc[0], "name": loc[1]} for loc in locations]
+
 
 @app.get("/categories", response_model=List[CategoryResponse])
 def get_categories(db: Session = Depends(get_db)):
