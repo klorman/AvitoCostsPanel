@@ -70,7 +70,7 @@ class Segment(Base):
     discount_matrix_id = Column(Integer)  # один сегмент - одна матрица
 
 
-engine = create_engine('postgresql://postgres:1234@localhost:5432/postgres')
+engine = create_engine('postgresql://postgres:123456@localhost:2345/postgres')
 Base.metadata.create_all(engine)
 
 Session = sessionmaker(bind=engine)
